@@ -1,26 +1,690 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="개발, CTF, 버그바운티, 기술 문서를 기록하는 Longhair Security Blog">
     <title>Longhair Security Blog</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --bg: #f7f8f3;
+            --surface: #ffffff;
+            --surface-soft: #eef4ee;
+            --text: #1d2521;
+            --muted: #66736c;
+            --line: #dce3dd;
+            --accent: #206b56;
+            --accent-strong: #123f34;
+            --accent-warm: #c46a32;
+            --code: #202a44;
+            --shadow: 0 18px 45px rgba(32, 52, 43, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            background:
+                radial-gradient(circle at top left, rgba(196, 106, 50, 0.16), transparent 28rem),
+                linear-gradient(180deg, #f7f8f3 0%, #edf3ee 100%);
+            color: var(--text);
+            font-family: "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid rgba(220, 227, 221, 0.86);
+            background: rgba(247, 248, 243, 0.88);
+            backdrop-filter: blur(16px);
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: min(1120px, calc(100% - 32px));
+            min-height: 68px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .brand-mark {
+            display: grid;
+            place-items: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: var(--accent-strong);
+            color: #f7f8f3;
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .nav-links a {
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a:focus-visible {
+            background: var(--surface-soft);
+            color: var(--accent-strong);
+            outline: none;
+        }
+
+        main {
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 40px;
+            align-items: center;
+            min-height: calc(100vh - 68px);
+            padding: 72px 0 64px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 18px;
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 30px;
+            height: 2px;
+            background: var(--accent-warm);
+        }
+
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
+
+        h1 {
+            max-width: 760px;
+            margin-bottom: 20px;
+            font-size: clamp(2.65rem, 7vw, 5.5rem);
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .lead {
+            max-width: 660px;
+            margin-bottom: 28px;
+            color: #46554d;
+            font-size: 1.1rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 36px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0 18px;
+            border: 1px solid var(--accent-strong);
+            border-radius: 8px;
+            font-weight: 800;
+        }
+
+        .button.primary {
+            background: var(--accent-strong);
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(18, 63, 52, 0.2);
+        }
+
+        .button.secondary {
+            background: rgba(255, 255, 255, 0.68);
+            color: var(--accent-strong);
+        }
+
+        .hero-meta {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            max-width: 700px;
+        }
+
+        .metric {
+            min-height: 92px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .metric strong {
+            display: block;
+            color: var(--accent-strong);
+            font-size: 1.45rem;
+            line-height: 1.1;
+        }
+
+        .metric span {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .profile-card {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .profile-media {
+            min-height: 220px;
+            background:
+                linear-gradient(135deg, rgba(18, 63, 52, 0.88), rgba(32, 107, 86, 0.62)),
+                url("https://avatars.githubusercontent.com/u/272761086?v=4") center / cover;
+        }
+
+        .profile-content {
+            padding: 22px;
+        }
+
+        .profile-content h2 {
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .profile-content p {
+            margin-bottom: 16px;
+            color: var(--muted);
+            font-size: 0.98rem;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .tag-list li {
+            padding: 6px 9px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface-soft);
+            color: var(--accent-strong);
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .section {
+            padding: 56px 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        .section-header h2 {
+            margin-bottom: 0;
+            font-size: clamp(1.75rem, 4vw, 2.6rem);
+            line-height: 1.1;
+            letter-spacing: 0;
+        }
+
+        .section-header p {
+            max-width: 440px;
+            margin-bottom: 0;
+            color: var(--muted);
+        }
+
+        .post-grid,
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .post-card,
+        .category-card {
+            min-height: 236px;
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.82);
+            box-shadow: 0 10px 30px rgba(32, 52, 43, 0.08);
+        }
+
+        .post-card.featured {
+            grid-column: span 2;
+            background:
+                linear-gradient(135deg, rgba(18, 63, 52, 0.93), rgba(32, 42, 68, 0.88)),
+                url("https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80") center / cover;
+            color: #fff;
+        }
+
+        .post-card.featured .post-meta,
+        .post-card.featured p {
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .post-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            color: var(--muted);
+            font-size: 0.86rem;
+            font-weight: 800;
+        }
+
+        .post-card h3,
+        .category-card h3 {
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            line-height: 1.28;
+        }
+
+        .post-card p,
+        .category-card p {
+            margin-bottom: 0;
+            color: var(--muted);
+        }
+
+        .category-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .category-index {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            background: var(--accent-strong);
+            color: #fff;
+            font-weight: 900;
+        }
+
+        .note-band {
+            display: grid;
+            grid-template-columns: 0.75fr 1.25fr;
+            gap: 28px;
+            align-items: center;
+            margin: 56px 0 72px;
+            padding: 30px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .note-band h2 {
+            margin-bottom: 10px;
+            font-size: clamp(1.7rem, 4vw, 2.35rem);
+            line-height: 1.12;
+        }
+
+        .note-band p {
+            margin-bottom: 0;
+            color: var(--muted);
+        }
+
+        .timeline {
+            display: grid;
+            gap: 14px;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 106px 1fr;
+            gap: 18px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: 0;
+        }
+
+        .timeline-item time {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 900;
+        }
+
+        .timeline-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .timeline-item span {
+            color: var(--muted);
+            font-size: 0.94rem;
+        }
+
+        .site-footer {
+            border-top: 1px solid var(--line);
+            padding: 28px 0 40px;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            width: min(1120px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        .footer-inner a {
+            color: var(--accent-strong);
+            font-weight: 800;
+        }
+
+        @media (max-width: 860px) {
+            .nav {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 14px 0;
+            }
+
+            .nav-links {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 2px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                min-height: auto;
+                padding-top: 52px;
+            }
+
+            .profile-card {
+                max-width: 440px;
+            }
+
+            .post-grid,
+            .category-grid,
+            .hero-meta,
+            .note-band {
+                grid-template-columns: 1fr;
+            }
+
+            .post-card.featured {
+                grid-column: auto;
+            }
+
+            .section-header,
+            .footer-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 520px) {
+            main,
+            .nav,
+            .footer-inner {
+                width: min(100% - 24px, 1120px);
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .post-card,
+            .category-card,
+            .note-band {
+                padding: 18px;
+            }
+
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <header class="site-header">
+        <nav class="nav" aria-label="주요 메뉴">
+            <a class="brand" href="#top" aria-label="Longhair Security Blog 홈">
+                <span class="brand-mark">LH</span>
+                <span>Longhair Security Blog</span>
+            </a>
+            <div class="nav-links">
+                <a href="#posts">Posts</a>
+                <a href="#categories">Categories</a>
+                <a href="#logs">Logs</a>
+                <a href="https://github.com/pjiseop" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+        </nav>
+    </header>
 
-    <h1>Longhair Security Blog</h1>
+    <main id="top">
+        <section class="hero" aria-labelledby="intro-title">
+            <div>
+                <p class="eyebrow">Computer Software Student | Cyber Security</p>
+                <h1 id="intro-title">배운 것과 뚫어본 것을 정확히 남기는 보안 블로그</h1>
+                <p class="lead">
+                    개발 기록, CTF 풀이, 버그바운티 리서치, 기술 문서와 논문 메모를 한곳에 모읍니다.
+                    재현 가능한 과정과 판단 근거를 중심으로 쓰는 개인 아카이브입니다.
+                </p>
+                <div class="hero-actions" aria-label="바로가기">
+                    <a class="button primary" href="#posts">최근 글 보기</a>
+                    <a class="button secondary" href="#categories">카테고리 탐색</a>
+                </div>
+                <div class="hero-meta" aria-label="블로그 요약">
+                    <div class="metric">
+                        <strong>6</strong>
+                        <span>기록 카테고리</span>
+                    </div>
+                    <div class="metric">
+                        <strong>Security</strong>
+                        <span>주요 관심 분야</span>
+                    </div>
+                    <div class="metric">
+                        <strong>Notes</strong>
+                        <span>실습과 문서화 중심</span>
+                    </div>
+                </div>
+            </div>
 
-    <p>Computer Software Student | Cyber Security</p>
+            <aside class="profile-card" aria-label="프로필">
+                <div class="profile-media" role="img" aria-label="GitHub 프로필 이미지 배경"></div>
+                <div class="profile-content">
+                    <h2>Longhair</h2>
+                    <p>보안과 개발을 공부하며 실습, 분석, 회고를 기록합니다.</p>
+                    <ul class="tag-list" aria-label="관심 태그">
+                        <li>Web Security</li>
+                        <li>CTF</li>
+                        <li>Bug Bounty</li>
+                        <li>Write-up</li>
+                    </ul>
+                </div>
+            </aside>
+        </section>
 
-    <h2>Categories</h2>
+        <section class="section" id="posts" aria-labelledby="posts-title">
+            <div class="section-header">
+                <h2 id="posts-title">최근 글</h2>
+                <p>글이 쌓이면 이 영역에 분석 글, 풀이, 개발 노트를 최신순으로 배치하면 됩니다.</p>
+            </div>
+            <div class="post-grid">
+                <article class="post-card featured">
+                    <div class="post-meta">
+                        <span>Featured</span>
+                        <span>Security</span>
+                    </div>
+                    <h3>첫 번째 보안 리서치 노트 준비 중</h3>
+                    <p>공격 흐름, 실습 환경, 재현 절차, 방어 관점을 함께 남기는 형식으로 정리할 예정입니다.</p>
+                </article>
+                <article class="post-card">
+                    <div class="post-meta">
+                        <span>CTF/Wargame</span>
+                        <span>Write-up</span>
+                    </div>
+                    <h3>풀이 과정 기록 템플릿</h3>
+                    <p>문제 의도, 관찰한 단서, 시도한 접근, 최종 풀이를 분리해 읽기 쉽게 남깁니다.</p>
+                </article>
+                <article class="post-card">
+                    <div class="post-meta">
+                        <span>Development</span>
+                        <span>Log</span>
+                    </div>
+                    <h3>개발 실험과 배운 점</h3>
+                    <p>작은 프로젝트에서 마주친 오류, 설계 선택, 나중에 다시 볼 명령어를 정리합니다.</p>
+                </article>
+            </div>
+        </section>
 
-    <ul>
-        <li>개발</li>
-        <li>CTF/Wargame</li>
-        <li>BugBounty</li>
-        <li>블로그/기술문서</li>
-        <li>논문/컨퍼런스</li>
-        <li>공모전/자격증</li>
-    </ul>
+        <section class="section" id="categories" aria-labelledby="categories-title">
+            <div class="section-header">
+                <h2 id="categories-title">카테고리</h2>
+                <p>각 주제는 글 목록 페이지로 분리해도 좋고, 당분간은 홈에서 바로 관리해도 충분합니다.</p>
+            </div>
+            <div class="category-grid">
+                <article class="category-card">
+                    <div>
+                        <span class="category-index">01</span>
+                        <h3>개발</h3>
+                        <p>프로젝트 제작, 자동화, 웹 개발, 디버깅 기록을 정리합니다.</p>
+                    </div>
+                </article>
+                <article class="category-card">
+                    <div>
+                        <span class="category-index">02</span>
+                        <h3>CTF/Wargame</h3>
+                        <p>문제 풀이 과정과 핵심 아이디어를 재현 가능한 형태로 남깁니다.</p>
+                    </div>
+                </article>
+                <article class="category-card">
+                    <div>
+                        <span class="category-index">03</span>
+                        <h3>BugBounty</h3>
+                        <p>취약점 분석 관점, 리포트 구성, 패치 후 회고를 기록합니다.</p>
+                    </div>
+                </article>
+                <article class="category-card">
+                    <div>
+                        <span class="category-index">04</span>
+                        <h3>블로그/기술문서</h3>
+                        <p>문서화 방식, 글 구조, 참고 자료 관리 방법을 다룹니다.</p>
+                    </div>
+                </article>
+                <article class="category-card">
+                    <div>
+                        <span class="category-index">05</span>
+                        <h3>논문/컨퍼런스</h3>
+                        <p>읽은 자료의 문제의식, 방법론, 적용 가능성을 요약합니다.</p>
+                    </div>
+                </article>
+                <article class="category-card">
+                    <div>
+                        <span class="category-index">06</span>
+                        <h3>공모전/자격증</h3>
+                        <p>준비 과정, 제출물, 시험 범위와 복습 포인트를 모읍니다.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
 
+        <section class="note-band" id="logs" aria-labelledby="logs-title">
+            <div>
+                <p class="eyebrow">Now Building</p>
+                <h2 id="logs-title">운영 기록</h2>
+                <p>블로그를 키워가면서 바뀐 구조와 작성 계획을 짧게 남기는 영역입니다.</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <time datetime="2026-10">2026.10</time>
+                    <div>
+                        <strong>홈 화면 구성</strong>
+                        <span>소개, 최근 글, 카테고리, 운영 기록 섹션을 정리했습니다.</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <time datetime="2026-10">Next</time>
+                    <div>
+                        <strong>첫 글 작성</strong>
+                        <span>CTF 풀이 또는 개발 기록을 첫 포스트로 연결할 계획입니다.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span>© 2026 Longhair Security Blog</span>
+            <a href="https://github.com/pjiseop/pjiseop.github.io" target="_blank" rel="noreferrer">Repository</a>
+        </div>
+    </footer>
 </body>
 </html>
