@@ -1,26 +1,525 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Longhair Security Blog</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background: #0b0f0e;
+            color: #e8eeee;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background: rgba(11, 15, 14, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #202826;
+        }
+
+        .nav-container {
+            max-width: 1100px;
+            margin: auto;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #62e6a7;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            font-size: 14px;
+            color: #aab6b2;
+        }
+
+        .nav-menu a:hover {
+            color: #62e6a7;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 650px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px 80px;
+            background:
+                radial-gradient(circle at center, #12352a 0%, #0b0f0e 55%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .terminal {
+            color: #62e6a7;
+            font-family: monospace;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: clamp(45px, 8vw, 80px);
+            margin-bottom: 15px;
+            letter-spacing: -3px;
+        }
+
+        .hero h1 span {
+            color: #62e6a7;
+        }
+
+        .hero p {
+            color: #aab6b2;
+            font-size: 18px;
+            margin-bottom: 35px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 13px 25px;
+            border: 1px solid #62e6a7;
+            border-radius: 6px;
+            color: #62e6a7;
+            transition: 0.25s;
+        }
+
+        .button:hover {
+            background: #62e6a7;
+            color: #0b0f0e;
+        }
+
+        /* Common */
+        section {
+            max-width: 1100px;
+            margin: auto;
+            padding: 90px 25px;
+        }
+
+        .section-title {
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #7f8c87;
+        }
+
+        /* About */
+        .about {
+            border-top: 1px solid #202826;
+        }
+
+        .about-box {
+            background: #111817;
+            border: 1px solid #202826;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .about-box p {
+            color: #aab6b2;
+        }
+
+        .about-box strong {
+            color: #62e6a7;
+        }
+
+        /* Categories */
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .category {
+            background: #111817;
+            border: 1px solid #202826;
+            border-radius: 10px;
+            padding: 25px;
+            transition: 0.25s;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+            border-color: #62e6a7;
+        }
+
+        .category-number {
+            color: #62e6a7;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .category h3 {
+            margin: 10px 0;
+        }
+
+        .category p {
+            color: #7f8c87;
+            font-size: 14px;
+        }
+
+        /* Posts */
+        .posts {
+            display: grid;
+            gap: 12px;
+        }
+
+        .post {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px;
+            background: #111817;
+            border: 1px solid #202826;
+            border-radius: 8px;
+            transition: 0.25s;
+        }
+
+        .post:hover {
+            border-color: #62e6a7;
+        }
+
+        .post-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .post-info p {
+            color: #7f8c87;
+            font-size: 14px;
+        }
+
+        .post-date {
+            color: #62e6a7;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        /* Projects */
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .project {
+            padding: 30px;
+            background: #111817;
+            border: 1px solid #202826;
+            border-radius: 10px;
+        }
+
+        .project h3 {
+            color: #62e6a7;
+            margin-bottom: 10px;
+        }
+
+        .project p {
+            color: #aab6b2;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid #202826;
+            text-align: center;
+            padding: 35px 20px;
+            color: #65716d;
+            font-size: 13px;
+        }
+
+        footer span {
+            color: #62e6a7;
+        }
+
+        /* Mobile */
+        @media (max-width: 700px) {
+
+            .nav-menu {
+                display: none;
+            }
+
+            .hero {
+                min-height: 550px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .categories {
+                grid-template-columns: 1fr;
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+
+            .post {
+                display: block;
+            }
+
+            .post-date {
+                display: block;
+                margin-top: 8px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>Longhair Security Blog</h1>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
 
-    <p>Computer Software Student | Cyber Security</p>
+            <div class="logo">
+                Longhair Security
+            </div>
 
-    <h2>Categories</h2>
+            <ul class="nav-menu">
+                <li><a href="#about">About</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#posts">Posts</a></li>
+                <li><a href="#projects">Projects</a></li>
+            </ul>
 
-    <ul>
-        <li>개발</li>
-        <li>CTF/Wargame</li>
-        <li>BugBounty</li>
-        <li>블로그/기술문서</li>
-        <li>논문/컨퍼런스</li>
-        <li>공모전/자격증</li>
-    </ul>
+        </div>
+    </nav>
+
+
+    <!-- Hero -->
+    <header class="hero">
+
+        <div class="hero-content">
+
+            <div class="terminal">
+                $ whoami
+            </div>
+
+            <h1>
+                Longhair <span>Security</span>
+            </h1>
+
+            <p>
+                Computer Software Student · Cyber Security
+            </p>
+
+            <a href="#posts" class="button">
+                Explore Blog →
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- About -->
+    <section id="about" class="about">
+
+        <div class="section-title">
+            <h2>About Me</h2>
+            <p>Who is behind Longhair Security?</p>
+        </div>
+
+        <div class="about-box">
+
+            <p>
+                안녕하세요. 저는 컴퓨터소프트웨어를 전공하며
+                <strong>Cyber Security</strong>를 공부하고 있습니다.
+            </p>
+
+            <br>
+
+            <p>
+                C언어와 Python을 비롯한 개발 기초부터
+                웹 보안, CTF/Wargame, 네트워크 보안 등을
+                하나씩 공부하고 있습니다.
+            </p>
+
+            <br>
+
+            <p>
+                이 블로그는 공부하면서 배운 내용을 기록하고
+                프로젝트와 보안 활동을 정리하기 위한 공간입니다.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Categories -->
+    <section id="categories">
+
+        <div class="section-title">
+            <h2>Categories</h2>
+            <p>What I study and record</p>
+        </div>
+
+        <div class="categories">
+
+            <a href="#" class="category">
+                <div class="category-number">01</div>
+                <h3>개발</h3>
+                <p>C / Python / Programming</p>
+            </a>
+
+            <a href="#" class="category">
+                <div class="category-number">02</div>
+                <h3>CTF / Wargame</h3>
+                <p>문제 풀이 및 보안 실습 기록</p>
+            </a>
+
+            <a href="#" class="category">
+                <div class="category-number">03</div>
+                <h3>BugBounty</h3>
+                <p>웹 취약점 및 보안 연구</p>
+            </a>
+
+            <a href="#" class="category">
+                <div class="category-number">04</div>
+                <h3>블로그 / 기술문서</h3>
+                <p>공부한 보안 개념 정리</p>
+            </a>
+
+            <a href="#" class="category">
+                <div class="category-number">05</div>
+                <h3>논문 / 컨퍼런스</h3>
+                <p>논문과 보안 행사 정리</p>
+            </a>
+
+            <a href="#" class="category">
+                <div class="category-number">06</div>
+                <h3>공모전 / 자격증</h3>
+                <p>대외활동 및 자격증 기록</p>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Recent Posts -->
+    <section id="posts">
+
+        <div class="section-title">
+            <h2>Recent Posts</h2>
+            <p>Latest study records</p>
+        </div>
+
+        <div class="posts">
+
+            <a href="#" class="post">
+                <div class="post-info">
+                    <h3>SSRF란 무엇인가?</h3>
+                    <p>웹 서버 요청과 SSRF 취약점 기초 정리</p>
+                </div>
+                <div class="post-date">2026.10.05</div>
+            </a>
+
+            <a href="#" class="post">
+                <div class="post-info">
+                    <h3>HTTP Request와 Response 이해하기</h3>
+                    <p>웹 통신의 기본 구조 정리</p>
+                </div>
+                <div class="post-date">2026.10.03</div>
+            </a>
+
+            <a href="#" class="post">
+                <div class="post-info">
+                    <h3>C언어 2차원 배열 정리</h3>
+                    <p>배열과 반복문을 이용한 문제 풀이</p>
+                </div>
+                <div class="post-date">2026.09.28</div>
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Projects -->
+    <section id="projects">
+
+        <div class="section-title">
+            <h2>Projects</h2>
+            <p>Projects and security activities</p>
+        </div>
+
+        <div class="projects">
+
+            <div class="project">
+                <h3>CyberArena</h3>
+                <p>
+                    웹 보안을 공부하고 실습할 수 있는
+                    Cyber Security Training Platform 프로젝트.
+                </p>
+            </div>
+
+            <div class="project">
+                <h3>Cyber Range Framework</h3>
+                <p>
+                    실제 산업 환경을 참고하여 Red Team과
+                    Blue Team의 보안 실습이 가능한 환경을 구축하는 프로젝트.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <p>
+            © 2026 <span>Longhair Security Blog</span>
+        </p>
+
+        <p>
+            Computer Software · Cyber Security
+        </p>
+
+    </footer>
 
 </body>
 </html>
