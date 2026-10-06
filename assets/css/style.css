@@ -57,10 +57,11 @@ h1 span { color: var(--blue); }
 .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .category-grid > a { min-height: 210px; padding: 26px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: white; transition: .2s; }
 .category-grid > a:hover { position: relative; z-index: 1; box-shadow: 0 12px 30px rgba(36,50,66,.08); transform: translateY(-3px); }
-.category-grid span { color: var(--blue); font-size: .7rem; font-weight: 700; }
-.category-grid h3 { margin: 35px 0 8px; font-size: 1.12rem; }
-.category-grid p { margin-bottom: 0; color: var(--muted); font-size: .85rem; }
-.category-grid b { display: block; margin-top: 22px; color: var(--blue); font-size: .76rem; }
+.category-grid span { display: block; margin-bottom: 8px; color: var(--blue); font-size: .7rem; font-weight: 700; }
+.category-grid h3 { margin: 0 0 18px; font-size: 1.12rem; }
+.category-grid p { margin-bottom: 26px; color: var(--muted); font-size: .85rem; }
+.category-grid b { display: block; margin-top: auto; color: var(--blue); font-size: .76rem; }
+.category-grid > a { display: flex; flex-direction: column; }
 .about { display: grid; grid-template-columns: .75fr 1.25fr; gap: 100px; }
 .about-copy > p { max-width: 680px; color: var(--muted); font-size: 1rem; word-break: keep-all; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
